@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kangen Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #ff66b2;
+        }
+        .options button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s; /* Transisi untuk animasi */
+        }
+        .options button:hover {
+            transform: translateY(-5px); /* Bergerak sedikit ke atas saat di-hover */
+        }
+        .btn-kangen {
+            background-color: #ff66b2;
+            color: white;
+        }
+        .btn-tidak {
+            background-color: #ccc;
+            color: #333;
+        }
+        .response {
+            display: none;
+            margin-top: 20px;
+            font-size: 2em;
+            color: #d14d4d;
+        }
+        .share-btn {
+            display: none;
+            margin-top: 20px;
+        }
+        .share-btn button {
+            background-color: #25d366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+        .stickers {
+            display: flex; /* Menggunakan flexbox untuk penataan sticker */
+            justify-content: center; /* Menjaga sticker di tengah */
+            margin-top: 20px;
+        }
+        .sticker {
+            display: none; /* Mulai sembunyikan semua sticker */
+            width: 150px;
+            margin: 0 10px; /* Jarak antar sticker */
+        }
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px; /* Posisikan di pojok kanan */
+            font-weight: bold;
+            font-size: 0.8em;
+            color: black;
+        }
+    </style>
+    <script>
+        let audio;
+        let moveCount = 0; // Counter untuk jumlah klik
+        const maxMoves = 15; // Maksimal jumlah klik sebelum tombol bisa diklik lagi
+
+        function playAudio() {
+            if (!audio) {
+                audio = new Audio("https://adewij.github.io/musik/original%20sound%20-%20riyan.adisptr_a_musicaldown.com_1730756972.mp3");
+                audio.loop = true;
+                audio.play().catch(error => {
+                    console.log("Audio tidak bisa diputar:", error);
+                });
+            }
+        }
+
+        function showWelcome() {
+            document.getElementById('welcome').style.display = 'none';
+            playAudio(); // Memutar audio saat tombol diklik
+            showQuestion();
+        }
+
+        function showQuestion() {
+            document.getElementById('question-section').style.display = 'block';
+            document.getElementById('question').innerText = "Aku kangen sama kamu 🥺";
+            document.getElementById('question-text').innerText = "Kamu kangen ngga sama aku?";
+            document.getElementById('question-options').style.display = 'block';
+        }
+
+        function moveButton() {
+            const button = document.querySelector('.btn-tidak');
+            const randomX = Math.floor(Math.random() * (window.innerWidth - 200)); // Menghitung posisi X acak
+            const randomY = Math.floor(Math.random() * (window.innerHeight - 100)); // Menghitung posisi Y acak
+            button.style.position = 'absolute'; // Membuat tombol bisa dipindah
+            button.style.left = randomX + 'px'; // Mengatur posisi X tombol
+            button.style.top = randomY + 'px'; // Mengatur posisi Y tombol
+        }
+
+        function showResponse(answer) {
+            let responseText;
+            const hugSticker = document.querySelector('.hug-sticker');
+            const newHugSticker = document.querySelector('.new-hug-sticker');
+            const sadSticker = document.querySelector('.sad-sticker');
+            const newSadSticker = document.querySelector('.new-sad-sticker');
+
+            if (answer === 'kangen') {
+                responseText = "Yeeaaayyy makasih yaa sudah kangen sama aku ❤️";
+                document.querySelector('.share-btn').style.display = 'block';
+                hugSticker.style.display = 'block'; // Tampilkan sticker peluk
+                newHugSticker.style.display = 'block'; // Tampilkan sticker baru peluk
+                sadSticker.style.display = 'none'; // Sembunyikan sticker sedih
+                newSadSticker.style.display = 'none'; // Sembunyikan sticker baru sedih
+            } else {
+                if (moveCount < maxMoves) {
+                    moveButton(); // Pindahkan tombol jika belum mencapai batas klik
+                    moveCount++; // Tambahkan counter
+                    return; // Keluarkan dari fungsi tanpa menunjukkan respons
+                } else {
+                    responseText = "Yaah! kok kamu gak kangen aku sih🥺 yaudah ah cukup tau aja🥲";
+                    document.querySelector('.share-btn').style.display = 'none';
+                    sadSticker.style.display = 'block'; // Tampilkan sticker sedih
+                    newSadSticker.style.display = 'block'; // Tampilkan sticker baru saat tidak kangen
+                    hugSticker.style.display = 'none'; // Sembunyikan sticker peluk
+                    newHugSticker.style.display = 'none'; // Sembunyikan sticker baru peluk
+                    moveCount = 0; // Reset counter setelah 15 klik
+                }
+            }
+            document.querySelector('.response').style.display = 'block';
+            document.querySelector('.response').innerHTML = responseText;
+        }
+
+        function shareOnWhatsApp() {
+            const message = "Yeeaaayyy makasih sudah kangen sama aku yaa ❤️";
+            const url = `https://api.whatsapp.com/send?text=`;
+            window.location.href = url;
+        }
+    </script>
+</head>
+<body>
+    <div id="welcome">
+        <h1>Halloo Dinaa, Apa kabar?</h1>
+        <button onclick="showWelcome()">Lanjut</button>
+    </div>
+
+    <div id="question-section" style="display: none;">
+        <h1 id="question">Aku kangen sama kamu 🥺</h1>
+        <p id="question-text">Kamu kangen ngga sama aku?</p>
+        <div id="question-options">
+            <div class="options">
+                <button class="btn-kangen" onclick="showResponse('kangen')">Kangen 🥰</button>
+                <button class="btn-tidak" onclick="showResponse('tidak')">Tidak 😢</button>
+            </div>
+            <div class="response"></div>
+            <div class="share-btn">
+                <button onclick="shareOnWhatsApp()">Kirim Jawaban</button>
+            </div>
+            <div class="stickers"> <!-- Wrapper untuk sticker -->
+                <img src="https://media.tenor.com/S_I8459GqXUAAAAj/a.gif" alt="hug sticker" class="sticker hug-sticker">
+                <img src="https://media.tenor.com/fFpVFqD_4esAAAAj/peluk.gif" alt="new hug sticker" class="sticker new-hug-sticker"> <!-- Sticker baru kangen -->
+                <img src="https://media.tenor.com/yZoKXA08ZyYAAAAj/bubu-bubu-dudu.gif" alt="sad sticker" class="sticker sad-sticker">
+                <img src="https://media.tenor.com/0XxZLMzjYV0AAAAj/dudu-crying-texting.gif" alt="new sad sticker" class="sticker new-sad-sticker"> <!-- Sticker baru sedih -->
+            </div>
+        </div>
+    </div>
+
+    <div class="footer"><strong>By: Ade Ivank</strong></div>
+</body>
+</html>
