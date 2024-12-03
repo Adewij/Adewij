@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz with Sound Effects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Quiz: What is 2 + 2?</h1>
+    
+    <!-- Button Choices -->
+    <button class="button" onclick="checkAnswer(true)">4</button>
+    <button class="button" onclick="checkAnswer(false)">5</button>
+    <button class="button" onclick="checkAnswer(false)">6</button>
+
+    <!-- Correct and Wrong Audio -->
+    <audio id="correct-sound" src="https://raw.githubusercontent.com/username/repository-name/main/correct.mp3"></audio>
+    <audio id="wrong-sound" src="https://raw.githubusercontent.com/username/repository-name/main/wrong.mp3"></audio>
+
+    <script>
+        // Function to play the sound based on answer correctness
+        function checkAnswer(isCorrect) {
+            if (isCorrect) {
+                document.getElementById("correct-sound").play();
+                alert("Correct! Well done.");
+            } else {
+                document.getElementById("wrong-sound").play();
+                alert("Oops! That's incorrect.");
+            }
+        }
+    </script>
+
+</body>
+</html>
